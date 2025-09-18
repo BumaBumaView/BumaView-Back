@@ -10,16 +10,8 @@ from ..repository import db
 router = APIRouter()
 
 
-def get_db():
-  database = db.SessionLocal()
-  try:
-    yield database
-  finally:
-    database.close()
-
-
 @router.post("/register", response_model=schemas.user.User)
-def register(user: schemas.user.UserCreate, database: Session = Depends(get_db)):
+def register(user: schemas.user.UserCreate, database: Session = Depends(db.get_db)):
   hashed_password = auth.get_password_hash(user.password)
   user_create = schemas.user.UserCreate(
     id=user.id, role=user.role, password=hashed_password)
@@ -30,7 +22,7 @@ def register(user: schemas.user.UserCreate, database: Session = Depends(get_db))
 
 
 @router.post("/token")
-def login_for_access_token(user_login: schemas.user.UserLogin, database: Session = Depends(get_db)):
+def login_for_access_token(user_login: schemas.user.UserLogin, database: Session = Depends(db.get_db)):
   user = user_service.get_user(database, user_id=user_login.id)
   if not user or not auth.verify_password(user_login.password, user.password):
     raise HTTPException(

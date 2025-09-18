@@ -10,7 +10,7 @@ from .services import user_service
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/token")
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), database: Session = Depends(user_service.get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), database: Session = Depends(db.get_db)):
   credentials_exception = HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
       detail="Could not validate credentials",
