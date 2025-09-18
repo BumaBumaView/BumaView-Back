@@ -29,3 +29,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), database: Session = De
   if user is None:
     raise credentials_exception
   return user
+
+
+def validate_env():
+  import os
+  required_vars = [
+    "DIFY_INTERVIEW_QUESTION_GENERATION_API_KEY", "DIFY_ENDPOINT"]
+  missing_vars = [var for var in required_vars if not os.getenv(var)]
+  if missing_vars:
+    raise EnvironmentError(
+      f"Missing required environment variables: {', '.join(missing_vars)}")
