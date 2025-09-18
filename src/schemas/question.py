@@ -14,6 +14,15 @@ class QuestionCreate(QuestionBase):
   pass
 
 
+class QuestionGenerate(BaseModel):
+  company_name: str
+  category: str
+
+
+class GeneratedQuestions(BaseModel):
+  questions: list[str]
+
+
 class Question(QuestionBase):
   question_id: int
 

@@ -4,7 +4,7 @@ from typing import List
 
 from ..repository import db
 from .. import schemas
-from ..services import question_service
+from ..services import question_service, ai_service
 
 router = APIRouter()
 
@@ -46,6 +46,6 @@ def delete_question_endpoint(question_id: int, database: Session = Depends(db.ge
 
 @router.post("/questions/generate/", response_model=schemas.GeneratedQuestions)
 def generate_questions_endpoint(request: schemas.QuestionGenerate):
-  questions = question_service.generate_questions(
+  questions = ai_service.generate_questions(
     request.company_name, request.category)
-  return questions
+  return schemas.GeneratedQuestions(questions=questions)
