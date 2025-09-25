@@ -20,6 +20,20 @@ def generate_questions(company_name: str, category: str) -> list[str]:
   return questions
 
 
+def generate_feedback(interview_data: dict) -> str:
+  api_key = os.getenv("DIFY_INTERVIEW_FEEDBACK_API_KEY")
+  endpoint = os.getenv("DIFY_ENDPOINT", "https://dify.obtuse.kr/v1/")
+
+  arguments = {
+    "interview_data": json.dumps(interview_data, indent=2)
+  }
+
+  response = LLM_Generate(api_key, endpoint, arguments)
+  data = ChatCompletionResponse(**response.json())
+  feedback = data.answer
+  return feedback
+
+
 def LLM_Generate(api_key, endpoint, arguments):
   url = f"{endpoint}/completion-messages"
   headers = {

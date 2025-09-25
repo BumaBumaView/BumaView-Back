@@ -42,3 +42,8 @@ def delete_interview(database: Session, interview_id: int):
   database.delete(db_interview)
   database.commit()
   return db_interview
+
+
+def save_feedback(database: Session, interview_id: int, feedback: str):
+  update_interview(database, interview_id,
+                   schemas.InterviewCreate(feedback=feedback))

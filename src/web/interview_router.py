@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-
 from ..repository import db
 from .. import schemas
-from ..services import interview_service
+from ..services import interview_service, ai_service
 
 router = APIRouter()
+
 
 @router.post("/interviews/", response_model=schemas.Interview)
 def create_interview_endpoint(interview: schemas.InterviewCreate, database: Session = Depends(db.get_db)):
@@ -24,6 +24,13 @@ def read_interview_endpoint(interview_id: int, database: Session = Depends(db.ge
   if db_interview is None:
     raise HTTPException(status_code=404, detail="Interview not found")
   return db_interview
+
+
+@router.get("/interviews/{interview_id}/get-feedback")
+def get_interview_feedback_endpoint(interview_id: int, database: Session = Depends(db.get_db)):
+  feedback = ai_service.generate_feedback(interview_id)
+  interview_service.save_feedback(database, interview_id, feedback)
+  return {"feedback": feedback}
 
 
 @router.put("/interviews/{interview_id}", response_model=schemas.Interview)
