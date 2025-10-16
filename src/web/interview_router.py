@@ -28,8 +28,9 @@ def read_interview_endpoint(interview_id: int, database: Session = Depends(db.ge
 
 @router.get("/interviews/{interview_id}/get-feedback")
 def get_interview_feedback_endpoint(interview_id: int, database: Session = Depends(db.get_db)):
-  feedback = ai_service.generate_feedback(interview_id)
-  interview_service.save_feedback(database, interview_id, feedback)
+  interview_data = interview_service.get_interview(database, interview_id)
+  feedback = ai_service.generate_feedback(interview_data)
+  interview_service.save_feedback(database, interview_id, interview_data, feedback)
   return {"feedback": feedback}
 
 

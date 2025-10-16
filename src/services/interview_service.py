@@ -44,6 +44,6 @@ def delete_interview(database: Session, interview_id: int):
   return db_interview
 
 
-def save_feedback(database: Session, interview_id: int, feedback: str):
+def save_feedback(database: Session, interview_id: int, interview_data, feedback: str):
   update_interview(database, interview_id,
-                   schemas.InterviewCreate(feedback=feedback))
+                   schemas.InterviewCreate(eye_score=interview_data.eye_score, pose_score=interview_data.pose_score, answer_score=interview_data.answer_score, data=interview_data.data, student_id=interview_data.student_id, feedback=feedback))

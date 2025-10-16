@@ -20,12 +20,19 @@ def generate_questions(company_name: str, category: str) -> list[str]:
   return questions
 
 
-def generate_feedback(interview_data: dict) -> str:
+def generate_feedback(interview_data) -> str:
   api_key = os.getenv("DIFY_INTERVIEW_FEEDBACK_API_KEY")
   endpoint = os.getenv("DIFY_ENDPOINT", "https://dify.obtuse.kr/v1/")
 
   arguments = {
-    "interview_data": json.dumps(interview_data, indent=2)
+    "query": json.dumps({
+      "eye_score": interview_data.eye_score,
+      "pose_score": interview_data.pose_score,
+      "answer_score": interview_data.answer_score,
+      "feedback": interview_data.feedback,
+      "interviewed_at": str(interview_data.interviewed_at),
+      "data": interview_data.data
+    })
   }
 
   response = LLM_Generate(api_key, endpoint, arguments)
